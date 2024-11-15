@@ -33,7 +33,7 @@ O código de exemplo fornecido na seção principal (`if __name__ == '__main__':
 
 ## Como Executar
 
-1. **Requisitos**: Certifique-se de ter Python 3 instalado em sua máquina
+1. **Requisitos**: Certifique-se de ter Python instalado em sua máquina
 2. **Execução**:
    - Navegue até o diretório onde o arquivo `analisador_lexico.py` está localizado
    - Execute o arquivo usando o comando:
