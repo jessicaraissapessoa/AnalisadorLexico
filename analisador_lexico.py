@@ -12,17 +12,17 @@ PALAVRAS_RESERVADAS = [
 
 # Definição dos padrões de tokens que o analisador léxico irá reconhecer
 TOKEN_REGEX = [
-  (rf'\b({"|".join(PALAVRAS_RESERVADAS)})\b', 'PALAVRAS RESERVADAS'), # Palavras reservadas pela linguagem (Python)
-  (r'[a-zA-Z_][a-zA-Z_0-9]*', 'IDENTIFICADOR'), # Identificador: nomes de variáveis, funções, classes, etc.
-  (r'".*?"|\'.*?\'', 'STRING'), # Valores de string entre aspas simples ou duplas
-  (r'\d+\.\d+', 'VALOR DECIMAL'), # Valores de ponto flutuante (números decimais)
-  (r'\d+', 'VALOR INTEIRO'), # Valores inteiros
   (r'\bTrue\b|\bFalse\b', 'VALOR BOOLEANO'), # Valores do tipo booleano (True ou False)
   (r'\bNone\b', 'VALOR NULO'), # Valor nulo (None)
+  (rf'\b({"|".join(PALAVRAS_RESERVADAS)})\b', 'PALAVRAS RESERVADAS'), # Palavras reservadas pela linguagem (Python)
+  (r'[a-zA-Z_][a-zA-Z_0-9]*', 'IDENTIFICADOR'), # Identificador: nomes de variáveis, funções, classes, etc.
+  (r'\".*?\"|\'.*?\'', 'STRING'), # Valores de string entre aspas simples ou duplas
+  (r'\d+\.\d+', 'VALOR DECIMAL'), # Valores de ponto flutuante (números decimais)
+  (r'\b\d+[eE][+-]?\d+\b', 'NOTACAO_CIENTIFICA'), # Notação científica (e.g., 1e10, 2.5E-3)
+  (r'\d+', 'VALOR INTEIRO'), # Valores inteiros
   (r'[+\-*/%=<>!]+', 'OPERADOR'), # Operadores matemáticos e lógicos
   (r'[(){}\[\],.:]', 'DELIMITADOR'), # Delimitadores: parênteses, chaves, colchetes, vírgulas, etc.
   (r'\#.*', 'COMENTÁRIO'), # Comentários iniciados por #
-  (r'\b\d+[eE][+-]?\d+\b', 'NOTACAO_CIENTIFICA'), # Notação científica (e.g., 1e10, 2.5E-3)
   (r'\s+', None),  # Ignorar espaços em branco
   (r'.', 'CARACTERE NÃO RECONHECIDO')  # Qualquer outro caractere que não se enquadre nas categorias anteriores
 ]
