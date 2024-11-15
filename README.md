@@ -114,7 +114,7 @@ Tokens encontrados: ['True', 'True']
 VALOR DECIMAL: 1 token(s)
 Tokens encontrados: ['3.14']
 
-NOTACAO_CIENTIFICA: 1 token(s)
+NOTAÇÃO CIENTÍFICA: 1 token(s)
 Tokens encontrados: ['1e10']
 
 VALOR NULO: 1 token(s)
