@@ -86,7 +86,7 @@ O analisador léxico foi testado com o seguinte código:
     print(f"Resultado da função lambda: {resultado_lambda}")
 ```
 
-Este código é utilizado para demonstrar a capacidade do analisador de reconhecer diferentes tipos de tokens, como palavras reservadas, identificadores, operadores, etc.
+Este código é utilizado para demonstrar a capacidade do analisador de reconhecer diferentes tipos de tokens, como palavras reservadas, identificadores, operadores, etc. Para testar/aplicar em outro código Python, basta alterar o valor da variável `codigo`, em `analisador_lexico.py` 
 
 ## Estrutura do Repositório
 
