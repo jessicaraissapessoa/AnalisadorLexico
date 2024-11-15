@@ -90,8 +90,8 @@ Esse código exibe o seguinte no terminal:
 PALAVRAS RESERVADAS: 24 token(s)
 Tokens encontrados: ['def', 'return', 'class', 'def', 'pass', 'def', 'return', 'try', 'print', 'except', 'as', 'print', 'for', 'in', 'if', 'print', 'else', 'print', 'while', 'break', 'with', 'as', 'lambda', 'print']
 
-IDENTIFICADOR: 44 token(s)
-Tokens encontrados: ['soma', 'a', 'b', 'a', 'b', 'Calculadora', '__init__', 'self', 'subtrair', 'self', 'a', 'b', 'a', 'b', 'resultado', 'soma', 'resultado', 'Exception', 'e', 'e', 'i', 'range', 'i', 'f', 'f', 'True', 'open', 'f', 'f', 'write', 'valor_decimal', 'valor_inteiro', 'valor_cientifico', 'e10', 'valor_booleano', 'True', 'valor_nulo', 'None', 'lambda_func', 'x', 'x', 'resultado_lambda', 'lambda_func', 'f']
+IDENTIFICADOR: 40 token(s)
+Tokens encontrados: ['soma', 'a', 'b', 'a', 'b', 'Calculadora', '__init__', 'self', 'subtrair', 'self', 'a', 'b', 'a', 'b', 'resultado', 'soma', 'resultado', 'Exception', 'e', 'e', 'i', 'range', 'i', 'f', 'f', 'open', 'f', 'f', 'write', 'valor_decimal', 'valor_inteiro', 'valor_cientifico', 'valor_booleano', 'valor_nulo', 'lambda_func', 'x', 'x', 'resultado_lambda', 'lambda_func', 'f']
 
 DELIMITADOR: 44 token(s)
 Tokens encontrados: ['(', ',', ')', ':', ':', '(', ')', ':', '(', ',', ',', ')', ':', ':', '(', ',', ')', '(', ')', ':', '(', ')', '(', ')', ':', ':', '(', ')', ':', '(', ')', ':', '(', ',', ')', ':', '.', '(', ')', ':', '(', ')', '(', ')']
@@ -102,14 +102,23 @@ Tokens encontrados: ['# Esta função retorna a soma de dois números']
 OPERADOR: 13 token(s)
 Tokens encontrados: ['+', '-', '=', '%', '==', '=', '=', '=', '=', '=', '=', '*', '=']
 
-VALOR INTEIRO: 9 token(s)
-Tokens encontrados: ['10', '5', '5', '2', '0', '42', '1', '2', '5']
+VALOR INTEIRO: 8 token(s)
+Tokens encontrados: ['10', '5', '5', '2', '0', '42', '2', '5']
 
 STRING: 6 token(s)
 Tokens encontrados: ['"{i} é par"', '"{i} é ímpar"', "'teste.txt'", "'w'", '"Exemplo de escrita em arquivo"', '"Resultado da função lambda: {resultado_lambda}"']
 
+VALOR BOOLEANO: 2 token(s)
+Tokens encontrados: ['True', 'True']
+
 VALOR DECIMAL: 1 token(s)
 Tokens encontrados: ['3.14']
+
+NOTACAO_CIENTIFICA: 1 token(s)
+Tokens encontrados: ['1e10']
+
+VALOR NULO: 1 token(s)
+Tokens encontrados: ['None']
 ```
 Este código é utilizado para demonstrar a capacidade do analisador de reconhecer diferentes tipos de tokens, como palavras reservadas, identificadores, operadores, etc. Para testar/aplicar em outro código Python, basta alterar o valor da variável `codigo`, em `analisador_lexico.py` 
 
