@@ -18,7 +18,7 @@ TOKEN_REGEX = [
   (r'[a-zA-Z_][a-zA-Z_0-9]*', 'IDENTIFICADOR'), # Identificador: nomes de variáveis, funções, classes, etc.
   (r'\".*?\"|\'.*?\'', 'STRING'), # Valores de string entre aspas simples ou duplas
   (r'\d+\.\d+', 'VALOR DECIMAL'), # Valores de ponto flutuante (números decimais)
-  (r'\b\d+[eE][+-]?\d+\b', 'NOTACAO_CIENTIFICA'), # Notação científica (e.g., 1e10, 2.5E-3)
+  (r'\b\d+[eE][+-]?\d+\b', 'NOTAÇÃO CIENTÍFICA'), # Notação científica (e.g., 1e10, 2.5E-3)
   (r'\d+', 'VALOR INTEIRO'), # Valores inteiros
   (r'[+\-*/%=<>!]+', 'OPERADOR'), # Operadores matemáticos e lógicos
   (r'[(){}\[\],.:]', 'DELIMITADOR'), # Delimitadores: parênteses, chaves, colchetes, vírgulas, etc.
