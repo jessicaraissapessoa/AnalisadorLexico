@@ -14,10 +14,12 @@ PALAVRAS_RESERVADAS = keyword.kwlist
 TOKEN_REGEX = [
   (r'\bTrue\b|\bFalse\b', 'VALOR BOOLEANO'), # Valores do tipo booleano (True ou False)
   (r'\bNone\b', 'VALOR NULO'), # Valor nulo (None)
-  (rf'\b({"|".join(PALAVRAS_RESERVADAS)})\b', 'PALAVRAS RESERVADAS'), # Palavras reservadas pela linguagem (Python)
-  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b(?=\s*\()', 'IDENTIFICADOR FUNÇÃO'), # Identificadores que são funções
-  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b(?=\s*=)', 'IDENTIFICADOR VARIÁVEL'), # Identificadores que são variáveis
-  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR ISOLADO'), # Identificador isolado
+  (rf'\b({'|'.join(PALAVRAS_RESERVADAS)})\b', 'PALAVRAS RESERVADAS'), # Palavras reservadas pela linguagem (Python)
+  (r'(?<=\bclass\s)\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - CLASSE'), # Identificador de classe
+  (r'(?<=\bdef\s)\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - FUNÇÃO'), # Identificador de definição de função
+  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b(?=\s*\()', 'IDENTIFICADOR - CHAMADA FUNÇÃO'), # Identificadores que são chamadas de função
+  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b(?=\s*=)', 'IDENTIFICADOR - VARIÁVEL'), # Identificadores que são variáveis
+  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - GERAL'), # Identificador geral
   (r'\".*?\"|\'.*?\'', 'STRING'), # Valores de string entre aspas simples ou duplas
   (r'\d+\.\d+', 'VALOR DECIMAL'), # Valores de ponto flutuante (números decimais)
   (r'\b\d+[eE][+-]?\d+\b', 'NOTAÇÃO CIENTÍFICA'), # Notação científica (e.g., 1e10, 2.5E-3)
@@ -56,6 +58,11 @@ class Analisador_lexico:
         if match:
           if tipo_token:  # Se não for um espaço em branco
             valor_token = match.group(0) # Captura o valor do token correspondente
+            if tipo_token == 'IDENTIFICADOR GERAL':
+                if tokens and tokens[-1][1] == 'def':
+                    tipo_token = 'IDENTIFICADOR FUNÇÃO'
+                elif tokens and tokens[-1][1] == 'class':
+                    tipo_token = 'IDENTIFICADOR CLASSE'
             tokens.append((tipo_token, valor_token)) # Adiciona o token à lista de tokens
           self.posicao = match.end(0) # Atualiza a posição do analisador
           break
@@ -185,9 +192,9 @@ if __name__ == '__main__':
     estilo.configure("TButton", foreground="#ffffff", background="#37474F", font=("Arial", 12), padding=6)
     estilo.configure("Red.TButton", foreground="#ffffff", background="#D32F2F", font=("Arial", 12), padding=6)
     estilo.configure("Green.TButton", foreground="#ffffff", background="#388E3C", font=("Arial", 12), padding=6)
-    estilo.map("TButton", background=[("active", "#455A64")])
+    estilo.map("TButton", background=[("active", "#546E7A")])
     estilo.map("Red.TButton", background=[("active", "#B71C1C")])
-    estilo.map("Green.TButton", background=[("active", "#2E7D32")])
+    estilo.map("Green.TButton", background=[("active", "#1B5E20")])
 
     # Criação da área de texto para entrada do código
     text_area = scrolledtext.ScrolledText(janela, font=("Courier New", 12), wrap=tk.WORD, bg="#263238", fg="#808080", insertbackground="#ffffff")
