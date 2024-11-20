@@ -58,11 +58,11 @@ class Analisador_lexico:
         if match:
           if tipo_token:  # Se não for um espaço em branco
             valor_token = match.group(0) # Captura o valor do token correspondente
-            if tipo_token == 'IDENTIFICADOR GERAL':
+            if tipo_token == 'IDENTIFICADOR - GERAL':
                 if tokens and tokens[-1][1] == 'def':
-                    tipo_token = 'IDENTIFICADOR FUNÇÃO'
+                    tipo_token = 'IDENTIFICADOR - FUNÇÃO'
                 elif tokens and tokens[-1][1] == 'class':
-                    tipo_token = 'IDENTIFICADOR CLASSE'
+                    tipo_token = 'IDENTIFICADOR - CLASSE'
             tokens.append((tipo_token, valor_token)) # Adiciona o token à lista de tokens
           self.posicao = match.end(0) # Atualiza a posição do analisador
           break
@@ -135,19 +135,22 @@ def analisar_codigo():
             categorias[tipo_token] = 1  # Inicializa a contagem de tokens da nova categoria
             tokens_por_categoria[tipo_token] = [valor_token]  # Inicializa a lista de tokens da nova categoria
 
-    resultado = ""
-    if not tokens:
-        resultado = "Nenhum token válido encontrado. O código fornecido está vazio =("
-    else:
-        for categoria, quantidade in categorias.items():
-            resultado += f'{categoria}: {quantidade} token(s)\n'
-            resultado += f'Tokens encontrados: {tokens_por_categoria[categoria]}\n\n'
-
     resultado_janela = tk.Toplevel(janela)
     resultado_janela.title("Resultado da Análise Léxica")
     resultado_janela.configure(bg="#263238")
     resultado_texto_frame = scrolledtext.ScrolledText(resultado_janela, wrap=tk.WORD, font=("Arial", 12), bg="#263238", fg="#ffffff", insertbackground="#ffffff")
-    resultado_texto_frame.insert("1.0", resultado)
+    
+    if not tokens:
+        resultado_texto_frame.insert("1.0", "Nenhum token válido encontrado. O código fornecido está vazio =(")
+    else:
+        for categoria, quantidade in categorias.items():
+            resultado_texto_frame.insert(tk.END, f'{categoria}: ', ("bold",))
+            resultado_texto_frame.insert(tk.END, f'{quantidade} token(s)\n')
+            for token in tokens_por_categoria[categoria]:
+                resultado_texto_frame.insert(tk.END, f'  \u2022 {token}\n')
+            resultado_texto_frame.insert(tk.END, "\n")
+    
+    resultado_texto_frame.tag_configure("bold", font=("Arial", 12, "bold"))
     resultado_texto_frame.config(state=tk.DISABLED)
     resultado_texto_frame.pack(padx=10, pady=10, expand=True, fill=tk.BOTH)
     btn_fechar = ttk.Button(resultado_janela, text="Fechar", command=resultado_janela.destroy)
