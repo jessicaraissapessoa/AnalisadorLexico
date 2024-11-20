@@ -134,7 +134,7 @@ if __name__ == '__main__':
 
     # Exibe a quantidade de tokens para cada categoria e seus respectivos tokens
     if not tokens:
-        print("Nenhum token válido encontrado. O código fornecido está vazio =(")
+        print("Por favor, insira um código válido para análise")
     else:
         for categoria, quantidade in categorias.items():
             print(f'{categoria}: {quantidade} token(s)')
