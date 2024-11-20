@@ -110,6 +110,7 @@ def destacar_sintaxe(event=None):
         text_area.tag_add("comment", inicio, fim)
         inicio = fim
 
+# Função para analisar o código e exibir os resultados
 def analisar_codigo():
     codigo = text_area.get("1.0", tk.END)
     if codigo.strip() == "Escreva aqui seu código em Python" or not codigo.strip():
@@ -118,44 +119,69 @@ def analisar_codigo():
         resultado_janela.configure(bg="#263238")
         resultado_texto = tk.Label(resultado_janela, text="Por favor, insira um código válido para análise", font=("Arial", 12), bg="#263238", fg="#ffffff", justify="left")
         resultado_texto.pack(padx=20, pady=20)
+        
+        # Botão para fechar a janela
         btn_fechar = ttk.Button(resultado_janela, text="Fechar", command=resultado_janela.destroy)
-        btn_fechar.pack(pady=(0, 10))
+        btn_fechar.configure(style='Red.TButton')
+        btn_fechar.pack(pady=10)
+        
         return
 
     analisador_lexico = Analisador_lexico(codigo)
     tokens = analisador_lexico.tokenizar()
 
-    categorias = {}  # Dicionário para armazenar a quantidade de tokens por categoria
-    tokens_por_categoria = {}  # Dicionário para armazenar os tokens específicos de cada categoria
-    for tipo_token, valor_token in tokens:
-        if tipo_token in categorias:
-            categorias[tipo_token] += 1  # Incrementa a contagem de tokens da categoria existente
-            tokens_por_categoria[tipo_token].append(valor_token)  # Adiciona o token à lista da categoria existente
-        else:
-            categorias[tipo_token] = 1  # Inicializa a contagem de tokens da nova categoria
-            tokens_por_categoria[tipo_token] = [valor_token]  # Inicializa a lista de tokens da nova categoria
-
     resultado_janela = tk.Toplevel(janela)
     resultado_janela.title("Resultado da Análise Léxica")
     resultado_janela.configure(bg="#263238")
-    resultado_texto_frame = scrolledtext.ScrolledText(resultado_janela, wrap=tk.WORD, font=("Arial", 12), bg="#263238", fg="#ffffff", insertbackground="#ffffff")
-    
-    if not tokens:
-        resultado_texto_frame.insert("1.0", "Nenhum token válido encontrado. O código fornecido está vazio =(")
-    else:
-        for categoria, quantidade in categorias.items():
-            resultado_texto_frame.insert(tk.END, f'{categoria}: ', ("bold",))
-            resultado_texto_frame.insert(tk.END, f'{quantidade} token(s)\n')
-            for token in tokens_por_categoria[categoria]:
-                resultado_texto_frame.insert(tk.END, f'  \u2022 {token}\n')
-            resultado_texto_frame.insert(tk.END, "\n")
-    
-    resultado_texto_frame.tag_configure("bold", font=("Arial", 12, "bold"))
-    resultado_texto_frame.config(state=tk.DISABLED)
-    resultado_texto_frame.pack(padx=10, pady=10, expand=True, fill=tk.BOTH)
-    btn_fechar = ttk.Button(resultado_janela, text="Fechar", command=resultado_janela.destroy)
-    btn_fechar.pack(pady=(0, 10))
 
+    # Container para os resultados
+    text_resultados = scrolledtext.ScrolledText(resultado_janela, font=("Courier New", 12, "bold"), wrap=tk.WORD, bg="#263238", fg="#ffffff", insertbackground="#ffffff", highlightthickness=0, borderwidth=0, state='normal')
+    text_resultados.pack(padx=20, pady=(20, 0), fill="both", expand=True)
+
+    if not tokens:
+        text_resultados.insert("1.0", "Nenhum token válido encontrado. O código fornecido está vazio =(")
+    else:
+        for categoria, valores in agrupar_tokens(tokens).items():
+            text_resultados.insert(tk.END, f"\n{categoria}: {len(valores)} token(s)\n")
+
+    text_resultados.config(state='disabled')
+
+    # Frame para os botões na parte inferior
+    frame_botoes_resultado = tk.Frame(resultado_janela, bg='#263238')
+    frame_botoes_resultado.pack(side='bottom', pady=20)
+
+    # Botão "Ver detalhes"
+    btn_detalhes = ttk.Button(frame_botoes_resultado, text="Ver detalhes", command=lambda: exibir_detalhes(tokens, text_resultados, btn_detalhes))
+    btn_detalhes.configure(style='Green.TButton')
+    btn_detalhes.pack(side="left", padx=10)
+
+# Função para exibir os detalhes dos tokens
+def exibir_detalhes(tokens, text_widget, btn_detalhes):
+    text_widget.config(state='normal')
+    if btn_detalhes['text'] == "Ver detalhes":
+        text_widget.delete("1.0", tk.END)
+        for categoria, valores in agrupar_tokens(tokens).items():
+            text_widget.insert(tk.END, f"\n\n{categoria}: {len(valores)} token(s)\n{'=' * 80}\n")
+            for token in valores:
+                text_widget.insert(tk.END, f"• {token}\n")
+        btn_detalhes.config(text="Ver resumo", style='Red.TButton')
+    else:
+        text_widget.delete("1.0", tk.END)
+        for categoria, valores in agrupar_tokens(tokens).items():
+            text_widget.insert(tk.END, f"\n{categoria}: {len(valores)} token(s)\n")
+        btn_detalhes.config(text="Ver detalhes", style='Green.TButton')
+    text_widget.config(state='disabled')
+
+# Função para agrupar os tokens por categoria
+def agrupar_tokens(tokens):
+    categorias = {}
+    for tipo_token, valor_token in tokens:
+        if tipo_token not in categorias:
+            categorias[tipo_token] = []
+        categorias[tipo_token].append(valor_token)
+    return categorias
+
+# Funções para interação com o editor de texto
 def on_focus_in(event):
     if text_area.get("1.0", tk.END).strip() == "Escreva aqui seu código em Python":
         text_area.delete("1.0", tk.END)
@@ -173,6 +199,7 @@ def inserir_hint():
     text_area.insert("1.0", "Escreva aqui seu código em Python")
     text_area.config(fg="#808080")
 
+# Código principal da aplicação
 if __name__ == '__main__':
     # Criação da janela principal
     janela = tk.Tk()
