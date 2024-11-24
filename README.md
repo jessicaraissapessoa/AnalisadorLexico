@@ -1,14 +1,20 @@
 # Analisador Léxico em Python
 
+<br>
+
 ## Sobre o Projeto
 
 Este projeto foi desenvolvido para a disciplina "Teoria da Computação e Compiladores", do curso de Ciência da Computação, e trata de dois analisadores léxicos de código Python desenvolvidos também em Python: um com interface gráfica e outro sem interface. Ambos identificam e categorizam os principais tokens de um código-fonte Python, permitindo a compreensão do processamento de um compilador de linguagem de programação.
 
-# Estrutura do Repositório
+<br>
+
+## Estrutura do Repositório
 
 - `analisador_lexico_sem_interface.py`: Arquivo contendo a implementação do analisador léxico sem interface gráfica
 - `analisador_lexico_com_interface.py`: Arquivo contendo a implementação do analisador léxico com interface gráfica
 - `README.md`: Este arquivo, contendo a descrição do projeto e instruções de uso
+
+<br>
 
 ## Categorias de tokens
 
@@ -31,11 +37,13 @@ O analisador léxico faz uso da biblioteca `re` (expressões regulares) para ide
 - **Notação Científica**: Números em notação científica, como `1e10` ou `2.5E-3`
 - **Espaços em Branco**: São identificados e contabilizados, embora sejam ignorados no processamento
 
-# Analisador léxico sem interface (analisador\_lexico\_sem\_interface.py)
+<br>
+
+## Analisador léxico sem interface (analisador\_lexico\_sem\_interface.py)
 
 Essa é uma versão do analisador léxico sem interface e que, portanto, tem sua usabilidade pelo editor de código (para informar código da análise) e terminal para executar o analisador léxico
 
-## Estrutura do Código
+### Estrutura do Código
 
 O analisador léxico é implementado na classe `Analisador_lexico`, que possui os seguintes métodos:
 
@@ -44,7 +52,7 @@ O analisador léxico é implementado na classe `Analisador_lexico`, que possui o
 
 O código de exemplo fornecido na seção principal (`if __name__ == '__main__':`) é utilizado para testar o funcionamento do analisador léxico, verificando diferentes tipos de tokens em um exemplo de código Python
 
-## Como utilizar
+### Como utilizar
 
 1. **Requisitos**: Certifique-se de ter Python instalado em sua máquina
 2. Abra o arquivo em um editor de código
@@ -140,11 +148,13 @@ O código de exemplo fornecido na seção principal (`if __name__ == '__main__':
    ```
 10. Você poderá permanecer no loop, selecionando outras categorias para ver detalhes, até que decida responder que não deseja ver detalhes de nenhuma categoria ou até encerrar a execução
 
-## Vídeo demonstrativo do uso
+### Vídeo demonstrativo do uso
 
 https://github.com/user-attachments/assets/987e5c7a-0504-44b4-9892-33a4b7c2250c
 
-# Analisador léxico com interface (analisador\_lexico\_com\_interface.py)
+<br>
+
+## Analisador léxico com interface (analisador\_lexico\_com\_interface.py)
 
 ## Estrutura do Código
 
