@@ -18,6 +18,8 @@ BTN_RED_HOVER_COLOR = "#B71C1C"
 BTN_GREEN_HOVER_COLOR = "#1B5E20"
 HINT_COLOR = "#808080"
 COMMENT_COLOR = "#9E9E9E"
+SUMARIO_HOVER_COLOR = "#455A64"
+SUMARIO_SELECTED_COLOR = "#1B5E20"
 
 # constantes - Fontes
 FONT_ARIAL_12 = ("Arial", 12)
@@ -69,7 +71,7 @@ class Analisador_lexico:
             valor_token = match.group(0)
             if tipo_token == 'IDENTIFICADOR - GERAL':
                 if tokens and tokens[-1][1] == 'def':
-                    tipo_token = 'IDENTIFICADOR - FUNçÃO'
+                    tipo_token = 'IDENTIFICADOR - FUNÇÃO'
                 elif tokens and tokens[-1][1] == 'class':
                     tipo_token = 'IDENTIFICADOR - CLASSE'
             tokens.append((tipo_token, valor_token, self.posicao))
@@ -112,9 +114,17 @@ def analisar_codigo():
     resultado_janela.title(RESULTADO_ANALISE_TITULO)
     resultado_janela.configure(bg=BG_COLOR)
 
+    # Frame principal para dividir o sumário e os resultados
+    frame_principal = tk.Frame(resultado_janela, bg=BG_COLOR)
+    frame_principal.pack(fill='both', expand=True)
+
+    # Criação do sumário para as categorias encontradas
+    frame_sumario = tk.Frame(frame_principal, bg=BG_COLOR)
+    frame_sumario.pack(side='left', padx=10, pady=10, anchor='n', fill='y')
+
     # Container para os resultados
-    text_resultados = scrolledtext.ScrolledText(resultado_janela, font=FONT_COURIER_BOLD_12, wrap=tk.WORD, bg=BG_COLOR, fg=FG_COLOR, insertbackground=FG_COLOR, highlightthickness=0, borderwidth=0, state='normal')
-    text_resultados.pack(padx=20, pady=(20, 0), fill="both", expand=True)
+    text_resultados = scrolledtext.ScrolledText(frame_principal, font=FONT_COURIER_BOLD_12, wrap=tk.WORD, bg=BG_COLOR, fg=FG_COLOR, insertbackground=FG_COLOR, highlightthickness=0, borderwidth=0, state='normal')
+    text_resultados.pack(side='left', padx=20, pady=(20, 0), fill="both", expand=True)
 
     for categoria, valores in agrupar_tokens(tokens).items():
         text_resultados.insert(tk.END, f"\n{categoria}: {len(valores)} token(s)\n")
@@ -126,29 +136,90 @@ def analisar_codigo():
     frame_botoes_resultado.pack(side='bottom', pady=20)
 
     # Botão "Ver detalhes"
-    btn_detalhes = ttk.Button(frame_botoes_resultado, text="Ver detalhes", command=lambda: exibir_detalhes(tokens, text_resultados, btn_detalhes))
+    btn_detalhes = ttk.Button(frame_botoes_resultado, text="Ver detalhes", command=lambda: exibir_detalhes(tokens, text_resultados, btn_detalhes, frame_sumario))
     btn_detalhes.configure(style='Green.TButton')
     btn_detalhes.pack(side="left", padx=10)
 
 # Função para exibir os detalhes dos tokens
-def exibir_detalhes(tokens, text_widget, btn_detalhes):
+def exibir_detalhes(tokens, text_widget, btn_detalhes, frame_sumario):
+    global categoria_selecionada
+    categoria_selecionada = None
+
     text_widget.config(state='normal')
     if btn_detalhes['text'] == "Ver detalhes":
         text_widget.delete("1.0", tk.END)
+        categorias_posicoes = {}
         for categoria, valores in agrupar_tokens(tokens).items():
+            posicao_inicio = text_widget.index(tk.END)
             text_widget.insert(tk.END, f"\n\n{categoria}: {len(valores)} token(s)\n{'=' * 80}\n")
+            categorias_posicoes[categoria] = posicao_inicio
             for valor in valores:
                 if categoria == 'ESPAÇO':
-                    text_widget.insert(tk.END, f"• Espaço em posição [{valor[1]}]\n")
+                    text_widget.insert(tk.END, f"\u2022 Espaço em posição [{valor[1]}]\n")
                 else:
-                    text_widget.insert(tk.END, f"• {valor[0]}\n")
+                    text_widget.insert(tk.END, f"\u2022 {valor[0]}\n")
+
+        # Limpar frame do sumário e recriar botões
+        for widget in frame_sumario.winfo_children():
+            widget.destroy()
+
+        label_sumario = tk.Label(frame_sumario, text="Selecione categoria:", font=FONT_ARIAL_12, fg=FG_COLOR, bg=BG_COLOR)
+        label_sumario.pack(pady=(0, 10))
+
+        for categoria in categorias_posicoes.keys():
+            btn_categoria = tk.Button(
+                frame_sumario, text=categoria,
+                command=lambda cat=categoria: destacar_categoria(cat, categorias_posicoes, text_widget, frame_sumario),
+                bg=BTN_BG_COLOR, fg=FG_COLOR, relief="flat",
+                activebackground=SUMARIO_HOVER_COLOR
+            )
+            btn_categoria.pack(fill='x', pady=2)
+            btn_categoria.bind("<Enter>", lambda e, b=btn_categoria: b.config(bg=SUMARIO_HOVER_COLOR))
+            btn_categoria.bind("<Leave>", lambda e, b=btn_categoria: b.config(bg=BTN_BG_COLOR if b.cget("text") != categoria_selecionada else SUMARIO_SELECTED_COLOR))
+
+        text_widget.bind("<MouseWheel>", lambda e: atualizar_destacado(text_widget, categorias_posicoes, frame_sumario))
+
         btn_detalhes.config(text="Ver resumo", style='Red.TButton')
     else:
         text_widget.delete("1.0", tk.END)
         for categoria, valores in agrupar_tokens(tokens).items():
             text_widget.insert(tk.END, f"\n{categoria}: {len(valores)} token(s)\n")
+
+        # Remover sumário ao voltar para a visão resumida
+        for widget in frame_sumario.winfo_children():
+            widget.destroy()
+
+        categoria_selecionada = None
+
         btn_detalhes.config(text="Ver detalhes", style='Green.TButton')
     text_widget.config(state='disabled')
+
+# Função para destacar a categoria selecionada no sumário
+def destacar_categoria(categoria, categorias_posicoes, text_widget, frame_sumario):
+    global categoria_selecionada
+    categoria_selecionada = categoria
+
+    # Destacar botão selecionado
+    for widget in frame_sumario.winfo_children():
+        if isinstance(widget, tk.Button) and widget.cget("text") == categoria:
+            widget.config(bg=SUMARIO_SELECTED_COLOR)
+        elif isinstance(widget, tk.Button):
+            widget.config(bg=BTN_BG_COLOR)
+
+    # Scroll até a categoria selecionada
+    text_widget.yview_moveto(float(text_widget.index(categorias_posicoes[categoria]).split('.')[0]) / int(text_widget.index(tk.END).split('.')[0]))
+
+# Função para atualizar a cor do botão destacado ao scrollar os resultados
+def atualizar_destacado(text_widget, categorias_posicoes, frame_sumario):
+    global categoria_selecionada
+    if categoria_selecionada:
+        posicao_selecionada = text_widget.index(categorias_posicoes[categoria_selecionada]).split('.')[0]
+        posicao_atual = text_widget.index("@0,0").split('.')[0]
+        if posicao_selecionada != posicao_atual:
+            categoria_selecionada = None
+            for widget in frame_sumario.winfo_children():
+                if isinstance(widget, tk.Button):  # Verificar se o widget é um botão
+                    widget.config(bg=BTN_BG_COLOR)
 
 # Função para agrupar os tokens por categoria
 def agrupar_tokens(tokens):
