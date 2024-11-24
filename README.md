@@ -228,7 +228,9 @@ Este exemplo é utilizado para demonstrar a capacidade do analisador de reconhec
 
 ## Instalando Python e Tkinter
 
-Certifique-se de ter Python e a biblioteca `tkinter` instalados em sua máquina. Siga as instruções de acordo com o seu sistema operacional:
+Para o analisador léxico sem interface, você pode ajustar as instruções de instalação para instalar apenas `python`, pois o `tkinter` é pré-requisito apenas para a versão do analisador léxico com interface. Siga as instruções de acordo com o seu sistema operacional:
+
+<br>
 
 ### Linux
 
@@ -247,6 +249,8 @@ sudo apt install python3-tk -y
 
 Para outras distribuições, use o gerenciador de pacotes correspondente (por exemplo, `dnf` no Fedora ou `yum` no CentOS).
 
+<br>
+
 ### Windows
 
 No Windows, o Python geralmente vem com o `tkinter` incluído. Caso não esteja instalado, siga estas etapas:
@@ -262,7 +266,9 @@ python -m tkinter
 
 Caso o `tkinter` não esteja instalado, reinstale o Python, garantindo que o módulo `tkinter` seja incluído na instalação.
 
-### macOS
+<br>
+
+### MacOS
 
 O macOS já vem com Python e `tkinter` instalados. Para garantir que você tenha a versão mais recente:
 
