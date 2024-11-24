@@ -4,7 +4,8 @@
 
 ## Sobre o Projeto
 
-Este projeto foi desenvolvido para a disciplina "Teoria da Computação e Compiladores", do curso de Ciência da Computação, e trata de dois analisadores léxicos de código Python desenvolvidos também em Python: um com interface gráfica e outro sem interface. Ambos identificam e categorizam os principais tokens de um código-fonte Python, permitindo a compreensão do processamento de um compilador de linguagem de programação.
+- Este projeto foi desenvolvido para a disciplina "Teoria da Computação e Compiladores", do curso de Ciência da Computação, e trata de dois analisadores léxicos de código Python desenvolvidos também em Python: um com interface gráfica e outro sem interface. Ambos identificam e categorizam os principais tokens de um código-fonte Python, permitindo a compreensão do processamento de um compilador de linguagem de programação
+- É necessário de pyhton e tkinter instalados na máquina, caso execute localmente. Ver instruções em [Instalando Python e Tkinter](##instalando-python-e-tkinter)
 
 <br>
 
@@ -54,7 +55,7 @@ O código de exemplo fornecido na seção principal (`if __name__ == '__main__':
 
 ### Como utilizar
 
-1. **Requisitos**: Certifique-se de ter Python instalado em sua máquina
+1. **Requisitos**: Certifique-se de ter Python instalado em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](##instalando-python-e-tkinter)
 2. Abra o arquivo em um editor de código
 3. Insira o código que deseja analisar como valor da variável `codigo` (linha 70). O arquivo do analisador já vem, por padrão, com esse código (valor da variável `codigo`) para análise:
    ```python
@@ -156,6 +157,8 @@ https://github.com/user-attachments/assets/987e5c7a-0504-44b4-9892-33a4b7c2250c
 
 ## Analisador léxico com interface (analisador\_lexico\_com\_interface.py)
 
+Essa é uma versão do analisador léxico com uma interface gráfica propiciada pelo uso da biblioteca `tkinter`, de modo que a usabilidade se dá pela execução do arquivo por terminal: isso iniciará uma interface gráfica interativa pela qual o usuário poderá informar o código a ser analisador e visualizar o resultado (de forma resumida e de forma detalhada)
+
 ## Estrutura do Código
 
 O analisador léxico com interface é implementado na classe `Analisador_lexico`, juntamente com uma interface gráfica desenvolvida utilizando a biblioteca `tkinter`. A interface permite ao usuário digitar ou colar o código a ser analisado e ver o resultado diretamente na aplicação, tanto na visão resumida quanto na visão detalhada.
@@ -164,7 +167,7 @@ Além dos métodos da classe `Analisador_lexico`, o arquivo contém funções es
 
 ## Como Executar
 
-1. **Requisitos**: Certifique-se de ter Python e a biblioteca `tkinter` instalados em sua máquina.
+1. **Requisitos**: Certifique-se de ter Python e a biblioteca `tkinter` instalados em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](##instalando-python-e-tkinter)
 2. **Execução**:
    - Navegue até o diretório onde o arquivo `analisador_lexico_com_interface.py` está localizado.
    - Execute o arquivo usando o comando:
@@ -221,3 +224,62 @@ A interface exibirá inicialmente uma visão resumida com as categorias de token
 
 Este exemplo é utilizado para demonstrar a capacidade do analisador de reconhecer diferentes tipos de tokens, como palavras reservadas, identificadores, operadores, etc. Para testar/aplicar em outro código Python, basta inserir o código na área de texto do analisador léxico com interface.
 
+<br>
+
+## Instalando Python e Tkinter
+
+Certifique-se de ter Python e a biblioteca `tkinter` instalados em sua máquina. Siga as instruções de acordo com o seu sistema operacional:
+
+### Linux
+
+Em distribuições baseadas no Debian, como Ubuntu:
+
+```bash
+# Atualizar os repositórios
+sudo apt update
+
+# Instalar o Python (se não estiver instalado)
+sudo apt install python3 python3-pip -y
+
+# Instalar o tkinter
+sudo apt install python3-tk -y
+```
+
+Para outras distribuições, use o gerenciador de pacotes correspondente (por exemplo, `dnf` no Fedora ou `yum` no CentOS).
+
+### Windows
+
+No Windows, o Python geralmente vem com o `tkinter` incluído. Caso não esteja instalado, siga estas etapas:
+
+1. Baixe o instalador do Python no site oficial: [https://www.python.org/downloads/](https://www.python.org/downloads/).
+2. Durante a instalação, certifique-se de marcar a opção **"Add Python to PATH"**.
+3. Após a instalação, verifique se o `tkinter` está presente:
+
+```bash
+# Verificar instalação do tkinter no Windows
+python -m tkinter
+```
+
+Caso o `tkinter` não esteja instalado, reinstale o Python, garantindo que o módulo `tkinter` seja incluído na instalação.
+
+### macOS
+
+O macOS já vem com Python e `tkinter` instalados. Para garantir que você tenha a versão mais recente:
+
+```bash
+# Atualizar o Homebrew (caso esteja usando)
+brew update
+
+# Instalar o Python mais recente
+brew install python
+
+# O tkinter vem junto com o Python no macOS.
+# Caso precise garantir:
+brew install python-tk
+```
+
+Verifique se o `tkinter` está funcionando:
+
+```bash
+python3 -m tkinter
+```
