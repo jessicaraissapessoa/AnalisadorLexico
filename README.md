@@ -46,12 +46,10 @@ Essa é uma versão do analisador léxico sem interface e que, portanto, tem sua
 
 ### Estrutura do Código
 
-O analisador léxico é implementado na classe `Analisador_lexico`, que possui os seguintes métodos:
-
-- **`__init__(self, codigo)`**: Inicializa o analisador com o código-fonte a ser analisado
-- **`tokenizar(self)`**: Realiza a tokenização do código, identificando e categorizando todos os tokens presentes
-
-O código de exemplo fornecido na seção principal (`if __name__ == '__main__':`) é utilizado para testar o funcionamento do analisador léxico, verificando diferentes tipos de tokens em um exemplo de código Python
+- O analisador léxico é implementado na classe `Analisador_lexico`, que possui os seguintes métodos:
+   - **`__init__(self, codigo)`**: Inicializa o analisador com o código-fonte a ser analisado
+   - **`tokenizar(self)`**: Realiza a tokenização do código, identificando e categorizando todos os tokens presentes
+- O código de exemplo fornecido na seção principal (`if __name__ == '__main__':`) é utilizado para testar o funcionamento do analisador léxico, verificando diferentes tipos de tokens em um exemplo de código Python
 
 ### Como utilizar
 
@@ -157,72 +155,81 @@ https://github.com/user-attachments/assets/987e5c7a-0504-44b4-9892-33a4b7c2250c
 
 ## Analisador léxico com interface (analisador\_lexico\_com\_interface.py)
 
-Essa é uma versão do analisador léxico com uma interface gráfica propiciada pelo uso da biblioteca `tkinter`, de modo que a usabilidade se dá pela execução do arquivo por terminal: isso iniciará uma interface gráfica interativa pela qual o usuário poderá informar o código a ser analisador e visualizar o resultado (de forma resumida e de forma detalhada)
+Essa é uma versão do analisador léxico com interface gráfica e que, portanto, tem sua usabilidade através de uma janela interativa, onde o código a ser analisado é inserido diretamente na interface gráfica.
 
-## Estrutura do Código
+### Estrutura do código
 
-O analisador léxico com interface é implementado na classe `Analisador_lexico`, juntamente com uma interface gráfica desenvolvida utilizando a biblioteca `tkinter`. A interface permite ao usuário digitar ou colar o código a ser analisado e ver o resultado diretamente na aplicação, tanto na visão resumida quanto na visão detalhada.
+- O analisador léxico é implementado na classe `Analisador_lexico`, que possui os seguintes métodos:
+   - **`__init__(self, codigo)`**: Inicializa o analisador com o código-fonte a ser analisado
+   - **`tokenizar(self)`**: Realiza a tokenização do código, identificando e categorizando todos os tokens presentes
+- A interface gráfica foi desenvolvida utilizando a biblioteca `tkinter`, permitindo ao usuário inserir o código diretamente em uma área de texto e visualizar os resultados (versão resumida e versão detalhada) em uma janela separada.
+- Além dos métodos da classe `Analisador_lexico`, o arquivo contém funções específicas de interação com a interface gráfica, como destacar a sintaxe, limpar o editor, mostrar mensagem de erro em caso de envio sem código, alternar entre a visão resumida e detalhada dos resultados da análise, navegar entre as categorias (com a lista de seus respectivos tokens) por meio de sumário interativo na visão detalhada
 
-Além dos métodos da classe `Analisador_lexico`, o arquivo contém funções específicas para interagir com a interface gráfica, como destacar a sintaxe, limpar o editor, e mostrar mensagens de erro.
+### Como utilizar
 
-## Como Executar
-
-1. **Requisitos**: Certifique-se de ter Python e a biblioteca `tkinter` instalados em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](#instalando-python-e-tkinter)
+1. **Requisitos**: Certifique-se de ter Python instalado em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](#instalando-python-e-tkinter)
 2. **Execução**:
-   - Navegue até o diretório onde o arquivo `analisador_lexico_com_interface.py` está localizado.
-   - Execute o arquivo usando o comando:
+   - Navegue até o diretório onde o arquivo `analisador_lexico_com_interface.py` está localizado
+   - Inicie o terminal nesse diretório
+   - No terminal, execute o arquivo usando o comando:
      ```
      python analisador_lexico_com_interface.py
      ```
-3. **Resultado**: Uma janela será aberta, permitindo que você insira o código Python para análise. Após clicar em "Analisar código", a interface exibirá a quantidade de tokens de cada categoria encontrada e permitirá que você veja os detalhes dos tokens identificados por categoria.
+3. **Uso da Interface**:
+   - Uma janela será aberta, permitindo que você insira e edite o código Python para análise na área de texto. Você pode usar o botão "Limpar editor" para apagar todo o código que inseriu
+     ![image](https://github.com/user-attachments/assets/c2300112-9f2c-44d2-865f-4a080e14e695)
+   - Você pode testar com esse código para demonstração/teste da capacidade do analisador de reconhecer diferentes tipos de tokens:
+      ```python
+       def soma(a, b):
+           # Esta função retorna a soma de dois números
+           return a + b
+      
+       class Calculadora:
+           def __init__(self):
+               pass
+      
+           def subtrair(self, a, b):
+               return a - b
+      
+       try:
+           resultado = soma(10, 5)
+           print(resultado)
+       except Exception as e:
+           print(e)
+      
+       for i in range(5):
+           if i % 2 == 0:
+               print(f"{i} é par")
+           else:
+               print(f"{i} é ímpar")
+      
+       while True:
+           break
+      
+       with open('teste.txt', 'w') as f:
+           f.write("Exemplo de escrita em arquivo")
+      
+       valor_decimal = 3.14
+       valor_inteiro = 42
+       valor_cientifico = 1e10
+       valor_booleano = True
+       valor_nulo = None
+       lambda_func = lambda x: x * 2
+       resultado_lambda = lambda_func(5)
+       print(f"Resultado da função lambda: {resultado_lambda}")
+      ```
+   - Clique no botão "Analisar código" para iniciar a análise.
+4. **Resultado**:
+   - Inicialmente, uma visão resumida das categorias de tokens e suas respectivas quantidades será exibida. Enviando o código sugerido em tópico 3, a exibição resumida dos resultados é:
+     ![image](https://github.com/user-attachments/assets/2735abcd-2de2-40af-8f61-60c3a9a8da16)
+   - Você pode clicar no botão "Ver detalhes" para expandir e visualizar todos os tokens identificados em cada categoria. Seguindo com a sugestão feita no tópico 4, a exibição detalhada dos resultados é:
+     ![image](https://github.com/user-attachments/assets/27877a2b-b871-4144-b027-e555c693953d)
+   - Você pode ter uma navegação rápida entre a listagem de tokens da visão detalhada ao clicar na categoria de interesse no menu da lateral
+   - Você pode alternar livremente entre a visão resumida e a visão detalhada dos resultados clicando no botão na parte inferior da tela de resultados ("Ver detalhes"/"Ver resumo")
 
-## Exemplo de Uso
+### Vídeo demonstrativo do uso
 
-Após iniciar o analisador léxico com interface, você poderá colar o seguinte exemplo de código na área de texto e clicar no botão "Analisar código":
-
-```python
- def soma(a, b):
-     # Esta função retorna a soma de dois números
-     return a + b
-
- class Calculadora:
-     def __init__(self):
-         pass
-
-     def subtrair(self, a, b):
-         return a - b
-
- try:
-     resultado = soma(10, 5)
-     print(resultado)
- except Exception as e:
-     print(e)
-
- for i in range(5):
-     if i % 2 == 0:
-         print(f"{i} é par")
-     else:
-         print(f"{i} é ímpar")
-
- while True:
-     break
-
- with open('teste.txt', 'w') as f:
-     f.write("Exemplo de escrita em arquivo")
-
- valor_decimal = 3.14
- valor_inteiro = 42
- valor_cientifico = 1e10
- valor_booleano = True
- valor_nulo = None
- lambda_func = lambda x: x * 2
- resultado_lambda = lambda_func(5)
- print(f"Resultado da função lambda: {resultado_lambda}")
-```
-
-A interface exibirá inicialmente uma visão resumida com as categorias de tokens e suas respectivas quantidades. Você poderá clicar no botão "Ver detalhes" para expandir e visualizar todos os tokens identificados em cada categoria.
-
-Este exemplo é utilizado para demonstrar a capacidade do analisador de reconhecer diferentes tipos de tokens, como palavras reservadas, identificadores, operadores, etc. Para testar/aplicar em outro código Python, basta inserir o código na área de texto do analisador léxico com interface.
+https://github.com/user-attachments/assets/cc04fa44-c0fe-41dc-8a49-16dfe3b62080
 
 <br>
 
@@ -247,7 +254,7 @@ sudo apt install python3 python3-pip -y
 sudo apt install python3-tk -y
 ```
 
-Para outras distribuições, use o gerenciador de pacotes correspondente (por exemplo, `dnf` no Fedora ou `yum` no CentOS).
+Para outras distribuições, troque o `apt` pelo gerenciador de pacotes correspondente (por exemplo, `dnf` no Fedora ou `yum` no CentOS).
 
 <br>
 
@@ -258,12 +265,10 @@ No Windows, o Python geralmente vem com o `tkinter` incluído. Caso não esteja 
 1. Baixe o instalador do Python no site oficial: [https://www.python.org/downloads/](https://www.python.org/downloads/).
 2. Durante a instalação, certifique-se de marcar a opção **"Add Python to PATH"**.
 3. Após a instalação, verifique se o `tkinter` está presente:
-
-```bash
-# Verificar instalação do tkinter no Windows
-python -m tkinter
-```
-
+   ```bash
+   # Verificar instalação do tkinter no Windows
+   python -m tkinter
+   ```
 Caso o `tkinter` não esteja instalado, reinstale o Python, garantindo que o módulo `tkinter` seja incluído na instalação.
 
 <br>
