@@ -2,8 +2,8 @@
 # Jéssica Raissa Pessoa Barros - 1362217774
 
 import re  # Biblioteca para trabalhar com expressões regulares (Regex)
-import tkinter as tk
-from tkinter import scrolledtext
+import tkinter as tk  # Biblioteca para criação de interfaces gráficas
+from tkinter import scrolledtext  # Biblioteca para criação de áreas de texto com barras de rolagem
 from tkinter import ttk  # Biblioteca para temas modernos
 import keyword  # Biblioteca para obter palavras reservadas do Python
 
@@ -32,7 +32,7 @@ RESULTADO_ANALISE_TITULO = "Resultado da análise léxica"
 TOKEN_REGEX = [
   (r'\bTrue\b|\bFalse\b', 'VALOR BOOLEANO'), # Valores do tipo booleano (True ou False)
   (r'\bNone\b', 'VALOR NULO'), # Valor nulo (None)
-  (rf'\b({'|'.join(PALAVRAS_RESERVADAS)})\b', 'PALAVRAS RESERVADAS'), # Palavras reservadas pela linguagem (Python)
+  (rf'\b({"|".join(PALAVRAS_RESERVADAS)})\b', 'PALAVRAS RESERVADAS'), # Palavras reservadas pela linguagem (Python)
   (r'(?<=\bclass\s)\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - CLASSE'), # Identificador de classe
   (r'(?<=\bdef\s)\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - FUNÇÃO'), # Identificador de definição de função
   (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b(?=\s*\()', 'IDENTIFICADOR - CHAMADA FUNÇÃO'), # Identificadores que são chamadas de função
@@ -45,6 +45,7 @@ TOKEN_REGEX = [
   (r'[+\-*/%=<>!]+', 'OPERADOR'), # Operadores matemáticos e lógicos
   (r'[(){}\[\],.:]', 'DELIMITADOR'), # Delimitadores: parênteses, chaves, colchetes, vírgulas, etc.
   (r'\#.*', 'COMENTÁRIO'), # Comentários iniciados por #
+  (r' ', 'ESPAÇO') # Espaços em branco
 ]
 
 # Classe do analisador léxico
@@ -68,10 +69,10 @@ class Analisador_lexico:
             valor_token = match.group(0)
             if tipo_token == 'IDENTIFICADOR - GERAL':
                 if tokens and tokens[-1][1] == 'def':
-                    tipo_token = 'IDENTIFICADOR - FUNÇÃO'
+                    tipo_token = 'IDENTIFICADOR - FUNçÃO'
                 elif tokens and tokens[-1][1] == 'class':
                     tipo_token = 'IDENTIFICADOR - CLASSE'
-            tokens.append((tipo_token, valor_token))
+            tokens.append((tipo_token, valor_token, self.posicao))
           self.posicao = match.end(0)
           break
       if not match:
@@ -93,13 +94,19 @@ def destacar_sintaxe(event=None):
 
 # Função para analisar o código e exibir os resultados
 def analisar_codigo():
-    codigo = text_area.get("1.0", tk.END).strip()
-    if not codigo or codigo == HINT_CODIGO:
+    codigo = text_area.get("1.0", tk.END)
+    if not codigo.strip() or codigo.strip() == HINT_CODIGO:
         mostrar_mensagem("Por favor, insira um código válido para análise")
         return
 
     analisador_lexico = Analisador_lexico(codigo)
     tokens = analisador_lexico.tokenizar()
+
+    tokens = [token for token in tokens if token[1] != HINT_CODIGO]  # Remover tokens que correspondem ao hint
+
+    if not tokens:
+        mostrar_mensagem("Por favor, insira um código válido para análise")
+        return
 
     resultado_janela = tk.Toplevel(janela)
     resultado_janela.title(RESULTADO_ANALISE_TITULO)
@@ -130,8 +137,11 @@ def exibir_detalhes(tokens, text_widget, btn_detalhes):
         text_widget.delete("1.0", tk.END)
         for categoria, valores in agrupar_tokens(tokens).items():
             text_widget.insert(tk.END, f"\n\n{categoria}: {len(valores)} token(s)\n{'=' * 80}\n")
-            for token in valores:
-                text_widget.insert(tk.END, f"• {token}\n")
+            for valor in valores:
+                if categoria == 'ESPAÇO':
+                    text_widget.insert(tk.END, f"• Espaço em posição [{valor[1]}]\n")
+                else:
+                    text_widget.insert(tk.END, f"• {valor[0]}\n")
         btn_detalhes.config(text="Ver resumo", style='Red.TButton')
     else:
         text_widget.delete("1.0", tk.END)
@@ -143,8 +153,8 @@ def exibir_detalhes(tokens, text_widget, btn_detalhes):
 # Função para agrupar os tokens por categoria
 def agrupar_tokens(tokens):
     categorias = {}
-    for tipo_token, valor_token in tokens:
-        categorias.setdefault(tipo_token, []).append(valor_token)
+    for tipo_token, valor_token, posicao in tokens:
+        categorias.setdefault(tipo_token, []).append((valor_token, posicao))
     return categorias
 
 # Função para mostrar mensagem de erro
@@ -191,13 +201,13 @@ if __name__ == '__main__':
     pos_x = (largura_tela // 2) - (largura_janela // 2)
     pos_y = (altura_tela // 2) - (altura_janela // 2)
     janela.geometry(f"{largura_janela}x{altura_janela}+{pos_x}+{pos_y}")
-    janela.configure(bg=BG_COLOR)  # Cor de fundo em dark mode (Material Design Dark)
+    janela.configure(bg=BG_COLOR)  # Cor de fundo em dark mode
 
     # Estilo para widgets
     estilo = ttk.Style()
     estilo.theme_use('clam')  # Tema mais moderno
 
-    # Cores inspiradas no Material Design para dark mode
+    # Aplicação de estilizações nos botões
     estilo.configure("TButton", foreground=FG_COLOR, background=BTN_BG_COLOR, font=FONT_ARIAL_12, padding=6)
     estilo.configure("Red.TButton", foreground=FG_COLOR, background=BTN_RED_COLOR, font=FONT_ARIAL_12, padding=6)
     estilo.configure("Green.TButton", foreground=FG_COLOR, background=BTN_GREEN_COLOR, font=FONT_ARIAL_12, padding=6)
