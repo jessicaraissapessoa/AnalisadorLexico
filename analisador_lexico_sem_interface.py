@@ -2,29 +2,28 @@
 # Jéssica Raissa Pessoa Barros - 1362217774
 
 import re  # Biblioteca para trabalhar com expressões regulares (Regex)
+import keyword  # Biblioteca para obter palavras reservadas do Python
 
-# Array de palavras reservadas
-PALAVRAS_RESERVADAS = [
-  'def', 'class', 'return', 'if', 'else', 'elif', 'while', 'for', 'in',
-  'import', 'from', 'as', 'print', 'pass', 'break', 'continue', 'try',
-  'except', 'finally', 'raise', 'with', 'assert', 'lambda'
-]
+PALAVRAS_RESERVADAS = keyword.kwlist
 
 # Definição dos padrões de tokens que o analisador léxico irá reconhecer
 TOKEN_REGEX = [
   (r'\bTrue\b|\bFalse\b', 'VALOR BOOLEANO'), # Valores do tipo booleano (True ou False)
   (r'\bNone\b', 'VALOR NULO'), # Valor nulo (None)
   (rf'\b({"|".join(PALAVRAS_RESERVADAS)})\b', 'PALAVRAS RESERVADAS'), # Palavras reservadas pela linguagem (Python)
-  (r'[a-zA-Z_][a-zA-Z_0-9]*', 'IDENTIFICADOR'), # Identificador: nomes de variáveis, funções, classes, etc.
-  (r'\".*?\"|\'.*?\'', 'STRING'), # Valores de string entre aspas simples ou duplas
+  (r'(?<=\bclass\s)\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - CLASSE'), # Identificador de classe
+  (r'(?<=\bdef\s)\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - FUNÇÃO'), # Identificador de definição de função
+  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b(?=\s*\()', 'IDENTIFICADOR - CHAMADA FUNÇÃO'), # Identificadores que são chamadas de função
+  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b(?=\s*=)', 'IDENTIFICADOR - VARIÁVEL'), # Identificadores que são variáveis
+  (r'\b[a-zA-Z_][a-zA-Z_0-9]*\b', 'IDENTIFICADOR - GERAL'), # Identificador geral
+  (r'".*?"|\'.*?\'', 'STRING'), # Valores de string entre aspas simples ou duplas
   (r'\d+\.\d+', 'VALOR DECIMAL'), # Valores de ponto flutuante (números decimais)
   (r'\b\d+[eE][+-]?\d+\b', 'NOTAÇÃO CIENTÍFICA'), # Notação científica (e.g., 1e10, 2.5E-3)
   (r'\d+', 'VALOR INTEIRO'), # Valores inteiros
   (r'[+\-*/%=<>!]+', 'OPERADOR'), # Operadores matemáticos e lógicos
   (r'[(){}\[\],.:]', 'DELIMITADOR'), # Delimitadores: parênteses, chaves, colchetes, vírgulas, etc.
   (r'\#.*', 'COMENTÁRIO'), # Comentários iniciados por #
-  (r'\s+', None),  # Ignorar espaços em branco
-  (r'.', 'CARACTERE NÃO RECONHECIDO')  # Qualquer outro caractere que não se enquadre nas categorias anteriores
+  (r' ', 'ESPAÇO') # Espaços em branco
 ]
 
 # Classe do analisador léxico
@@ -32,48 +31,40 @@ class Analisador_lexico:
 
   # Construtor da classe
   def __init__(self, codigo):
-    
-    # Inicializa o analisador léxico com o código fonte a ser analisado
     self.codigo = codigo # Código a ser analisado
     self.posicao = 0 # Posição inicial da análise
 
   # Tokenização do código-fonte
   def tokenizar(self):
-    
-    # Lista que armazena os tokens encontrados
     tokens = []
-    
-    # Percorrendo o código-fonte até a posição ser igual ao comprimento do código
     while self.posicao < len(self.codigo):
-
-      # Variável que armazena correspondência com padrão inializa como None
       match = None
-
-      # Iteração sobre os padrões definidos em TOKEN_REGEX
       for token_regex, tipo_token in TOKEN_REGEX:
-        
-        # Compila a expressão regular do token atual
         regex = re.compile(token_regex)
-        
-        # Tenta encontrar uma correspondência no código a partir da posição atual
         match = regex.match(self.codigo, self.posicao)
-        
-        # Se o tipo do token não for None (ou seja, se não for um espaço em branco)
         if match:
-          if tipo_token:  # Se não for um espaço em branco
-            valor_token = match.group(0) # Captura o valor do token correspondente
-            tokens.append((tipo_token, valor_token)) # Adiciona o token à lista de tokens
-          self.posicao = match.end(0) # Atualiza a posição do analisador
+          if tipo_token:
+            valor_token = match.group(0)
+            if tipo_token == 'IDENTIFICADOR - GERAL':
+                if tokens and tokens[-1][1] == 'def':
+                    tipo_token = 'IDENTIFICADOR - FUNÇÃO'
+                elif tokens and tokens[-1][1] == 'class':
+                    tipo_token = 'IDENTIFICADOR - CLASSE'
+            tokens.append((tipo_token, valor_token, self.posicao))
+          self.posicao = match.end(0)
           break
-      # Se nenhum padrão corresponder ao caractere atual, ignora o caractere não esperado para evitar erro
       if not match:
-        self.posicao += 1 # Avança para o próximo caractere para evitar ficar preso em um caractere inválido
-    
-    # Retorna a lista de tokens identificados
+        self.posicao += 1
     return tokens
 
+# Função para agrupar os tokens por categoria
+def agrupar_tokens(tokens):
+    categorias = {}
+    for tipo_token, valor_token, posicao in tokens:
+        categorias.setdefault(tipo_token, []).append((valor_token, posicao))
+    return categorias
+
 if __name__ == '__main__':
-    
     # Código-fonte de teste do analisador léxico:
 
     codigo = """
@@ -122,20 +113,32 @@ if __name__ == '__main__':
     tokens = analisador_lexico.tokenizar()
 
     # Agrupa os tokens por categoria e conta a quantidade de cada um
-    categorias = {}  # Dicionário para armazenar a quantidade de tokens por categoria
-    tokens_por_categoria = {}  # Dicionário para armazenar os tokens específicos de cada categoria
-    for tipo_token, valor_token in tokens:
-        if tipo_token in categorias:
-            categorias[tipo_token] += 1  # Incrementa a contagem de tokens da categoria existente
-            tokens_por_categoria[tipo_token].append(valor_token)  # Adiciona o token à lista da categoria existente
-        else:
-            categorias[tipo_token] = 1  # Inicializa a contagem de tokens da nova categoria
-            tokens_por_categoria[tipo_token] = [valor_token]  # Inicializa a lista de tokens da nova categoria
+    categorias = agrupar_tokens(tokens)
 
     # Exibe a quantidade de tokens para cada categoria e seus respectivos tokens
     if not tokens:
         print("Por favor, insira um código válido para análise")
     else:
-        for categoria, quantidade in categorias.items():
-            print(f'{categoria}: {quantidade} token(s)')
-            print(f'Tokens encontrados: {tokens_por_categoria[categoria]}\n')
+        primeira_vez = True
+        while True:
+            if primeira_vez or input("\nGostaria de ver os tokens encontrados para alguma categoria? Digite s para sim ou n para não: ").strip().lower() == 's':
+                if not primeira_vez:
+                    print("\nCategorias detectadas:")
+                for idx, (categoria, valores) in enumerate(categorias.items(), start=1):
+                    print(f'{idx}. {categoria}: {len(valores)} token(s)')
+                primeira_vez = False
+            else:
+                print("Até a próxima!")
+                break
+
+            try:
+                numero_categoria = int(input("Informe o número da categoria para a qual quer ver os tokens listados. EX: 5: "))
+                if 1 <= numero_categoria <= len(categorias):
+                    categoria_selecionada = list(categorias.keys())[numero_categoria - 1]
+                    print(f'\nTokens da categoria "{categoria_selecionada}":')
+                    for valor, posicao in categorias[categoria_selecionada]:
+                        print(f' - {valor} (Posição: {posicao})')
+                else:
+                    print("Número de categoria inválido. Tente novamente.")
+            except ValueError:
+                print("Entrada inválida. Por favor, insira um número válido.")
