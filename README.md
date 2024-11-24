@@ -5,7 +5,7 @@
 ## Sobre o Projeto
 
 - Este projeto foi desenvolvido para a disciplina "Teoria da Computação e Compiladores", do curso de Ciência da Computação, e trata de dois analisadores léxicos de código Python desenvolvidos também em Python: um com interface gráfica e outro sem interface. Ambos identificam e categorizam os principais tokens de um código-fonte Python, permitindo a compreensão do processamento de um compilador de linguagem de programação
-- É necessário de pyhton e tkinter instalados na máquina, caso execute localmente. Ver instruções em [Instalando Python e Tkinter](##instalando-python-e-tkinter)
+- É necessário de pyhton e tkinter instalados na máquina, caso execute localmente. Ver instruções em [Instalando Python e Tkinter](#instalando-python-e-tkinter)
 
 <br>
 
@@ -55,7 +55,7 @@ O código de exemplo fornecido na seção principal (`if __name__ == '__main__':
 
 ### Como utilizar
 
-1. **Requisitos**: Certifique-se de ter Python instalado em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](##instalando-python-e-tkinter)
+1. **Requisitos**: Certifique-se de ter Python instalado em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](#instalando-python-e-tkinter)
 2. Abra o arquivo em um editor de código
 3. Insira o código que deseja analisar como valor da variável `codigo` (linha 70). O arquivo do analisador já vem, por padrão, com esse código (valor da variável `codigo`) para análise:
    ```python
@@ -167,7 +167,7 @@ Além dos métodos da classe `Analisador_lexico`, o arquivo contém funções es
 
 ## Como Executar
 
-1. **Requisitos**: Certifique-se de ter Python e a biblioteca `tkinter` instalados em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](##instalando-python-e-tkinter)
+1. **Requisitos**: Certifique-se de ter Python e a biblioteca `tkinter` instalados em sua máquina. Ver instruções de instalações em [Instalando Python e Tkinter](#instalando-python-e-tkinter)
 2. **Execução**:
    - Navegue até o diretório onde o arquivo `analisador_lexico_com_interface.py` está localizado.
    - Execute o arquivo usando o comando:
